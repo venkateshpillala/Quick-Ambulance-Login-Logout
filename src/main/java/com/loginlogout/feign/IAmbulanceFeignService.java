@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.loginlogout.dto.Ambulance;
 
 
-@FeignClient("QUICK-AMBULANCE-DATABASE")
+@FeignClient(name = "QUICK-AMBULANCE-DATABASE", url="https://quick-ambulance-database.onrender.com")
 public interface IAmbulanceFeignService {
 	@GetMapping("/ambulance")
 	public ResponseEntity<Ambulance> findVehicleByVehicleNumber(@RequestParam String vehicleNumber);
