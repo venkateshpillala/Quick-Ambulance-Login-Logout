@@ -1,6 +1,8 @@
 package com.loginlogout.config;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
@@ -20,6 +22,8 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -43,7 +47,15 @@ public class SecurityConfig {
             .formLogin(form -> form
                 .loginProcessingUrl("/auth/login")
                 .successHandler((request, response, authentication) -> {
-                    response.sendRedirect("/auth/login-success");
+                	
+                	 response.setContentType("application/json");
+                	 response.setCharacterEncoding("UTF-8");
+
+                	 Map<String, Object> data = new HashMap<>();
+                	 data.put("username", authentication.getName());
+                	 data.put("roles", authentication.getAuthorities());
+
+                	 new ObjectMapper().writeValue(response.getWriter(), data);
                 })
                 .failureHandler((request, response, exception) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
