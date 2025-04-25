@@ -45,27 +45,15 @@ public class AuthController {
 	@Autowired
 	private IRolesService roleService;
 
-	@GetMapping("/login-success")
-	public ResponseEntity<Roles> loginSuccess(HttpServletRequest request) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String username = authentication.getName();
-
-		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-		String role = authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(", ")); // Joining
-																													// multiple
-																													// roles
-																													// if
-																													// there
-																													// are
-																													// any
-		Roles roles = roleService.getUserByUsername(username);
-
+	@PostMapping("/login-success")
+	public ResponseEntity<Roles> loginSuccess(@RequestBody Roles roles ,HttpServletRequest request) {
+		
 		HttpSession session = request.getSession();
 		session.setAttribute("roles", roles);
 
-		if (role.equalsIgnoreCase("DRIVER")) {
-			driverService.updateDriverStatus(username, true);
-			driverLogsService.saveDriverLoginDetails(username);
+		if (roles.getRole().equalsIgnoreCase("DRIVER")) {
+			driverService.updateDriverStatus(roles.getUsername(), true);
+			driverLogsService.saveDriverLoginDetails(roles.getUsername());
 		}
 
 		return new ResponseEntity<Roles>(roles, HttpStatus.OK);
