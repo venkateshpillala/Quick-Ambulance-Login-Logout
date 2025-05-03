@@ -41,7 +41,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login-success", "/auth/logout-success", "/auth/update-vehicle").permitAll()
+                .requestMatchers("/auth/login-success", "/auth/update-vehicle", "/auth/logout-success").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
