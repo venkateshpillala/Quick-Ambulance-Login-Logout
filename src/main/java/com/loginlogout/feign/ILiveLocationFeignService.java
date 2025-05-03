@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.loginlogout.dto.LiveLocation;
 
 
-@FeignClient(name = "QUICK-AMBULANCE-DATABASE", url="https://quick-ambulance-database.onrender.com")
+@FeignClient(name = "QUICK-AMBULANCE-DATABASE", url="http://localhost:8083")
 public interface ILiveLocationFeignService {
 
 	@PostMapping("/driver-live-location")

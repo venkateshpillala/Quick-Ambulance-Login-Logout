@@ -3,9 +3,6 @@ package com.loginlogout.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import com.loginlogout.dto.Roles;
@@ -13,7 +10,6 @@ import com.loginlogout.service.IAmbulanceService;
 import com.loginlogout.service.IDriverLogsService;
 import com.loginlogout.service.IDriverService;
 import com.loginlogout.service.ILiveLocationService;
-import com.loginlogout.service.IRolesService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,10 +17,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -41,9 +35,6 @@ public class AuthController {
 
 	@Autowired
 	private ILiveLocationService liveLocationService;
-
-	@Autowired
-	private IRolesService roleService;
 
 	@PostMapping("/login-success")
 	public ResponseEntity<Roles> loginSuccess(@RequestBody Roles roles ,HttpServletRequest request) {

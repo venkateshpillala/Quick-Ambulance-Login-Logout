@@ -3,7 +3,6 @@ package com.loginlogout.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.loginlogout.dto.Ambulance;
 import com.loginlogout.feign.IAmbulanceFeignService;
 
 @Service

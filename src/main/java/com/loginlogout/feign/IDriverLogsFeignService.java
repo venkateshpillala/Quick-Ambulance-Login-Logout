@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.loginlogout.dto.DriverLogs;
 
 
-@FeignClient(name = "QUICK-AMBULANCE-DATABASE", url="https://quick-ambulance-database.onrender.com")
+@FeignClient(name = "QUICK-AMBULANCE-DATABASE", url="http://localhost:8083")
 public interface IDriverLogsFeignService {
 
 	@PostMapping("/driver-logs/login")
