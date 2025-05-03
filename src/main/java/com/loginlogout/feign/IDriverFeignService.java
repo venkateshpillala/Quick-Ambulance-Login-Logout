@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.loginlogout.dto.Driver;
 
 
-@FeignClient(name = "QUICK-AMBULANCE-DATABASE", url="http://localhost:8083")
+@FeignClient(name = "QUICK-AMBULANCE-DATABASE", url="https://quick-ambulance-database.onrender.com")
 public interface IDriverFeignService {
 	@GetMapping("/driver")
 	public ResponseEntity<Driver> findByUsername(@RequestParam String username);
