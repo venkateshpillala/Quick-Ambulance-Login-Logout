@@ -37,8 +37,8 @@ public class AuthController {
 	private ILiveLocationService liveLocationService;
 
 	@PostMapping("/login-success")
-	public ResponseEntity<Roles> loginSuccess(@RequestBody Roles roles ,HttpServletRequest request) {
-		
+	public ResponseEntity<Roles> loginSuccess(@RequestBody Roles roles, HttpServletRequest request) {
+
 		HttpSession session = request.getSession();
 		session.setAttribute("roles", roles);
 
@@ -51,20 +51,20 @@ public class AuthController {
 	}
 
 	@GetMapping("/logout-success")
-	public ResponseEntity<Map<String, String>> logoutSuccess(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Map<String, String>> logoutSuccess(@RequestBody Roles role, 
+			HttpServletRequest request,
+			HttpServletResponse response) {
 
 		Map<String, String> result = new HashMap<String, String>();
-		HttpSession session = request.getSession(false);
-		Roles roles = (Roles) session.getAttribute("roles");
 
-		if (roles.getRole().equalsIgnoreCase("DRIVER")) {
-			driverService.updateDriverStatus(roles.getUsername(), false);
-			driverLogsService.logoutDriver(roles.getUsername());
+		if (role.getRole().equalsIgnoreCase("DRIVER")) {
+			driverService.updateDriverStatus(role.getUsername(), false);
+			driverLogsService.logoutDriver(role.getUsername());
 			ambulanceService.updateAmbulanceStatus(
-					driverLogsService.getDriverLogsByUsernameAndDate(roles.getUsername(), LocalDate.now())
-							.getAmbulance().getVehicleNumber(),
+					driverLogsService.getDriverLogsByUsernameAndDate(role.getUsername(), LocalDate.now()).getAmbulance()
+							.getVehicleNumber(),
 					false);
-			liveLocationService.deleteDriverLiveLocation(roles.getUsername());
+			liveLocationService.deleteDriverLiveLocation(role.getUsername());
 		}
 
 		Cookie cookie = new Cookie("JSESSIONID", "");
@@ -73,23 +73,20 @@ public class AuthController {
 		cookie.setMaxAge(0); // tells browser to delete it
 		response.addCookie(cookie);
 
-		if (session != null) {
-			result.put("username", roles.getUsername());
-			result.put("role", roles.getRole());
-			result.put("logout", "success");
-
-			session.invalidate();
-		}
+		result.put("username", role.getUsername());
+		result.put("role", role.getRole());
+		result.put("logout", "success");
+		request.getSession(false).invalidate();
 		return new ResponseEntity<Map<String, String>>(result, HttpStatus.OK);
 	}
 
 	@PostMapping("/update-vehicle")
-	public ResponseEntity<String> updateVehicle(HttpServletRequest request, @RequestParam String vehicleNumber) {
-		HttpSession session = request.getSession(false);
-		Roles role = (Roles) session.getAttribute("roles");
-		driverLogsService.updateVehicle(role.getUsername(), vehicleNumber);
+	public ResponseEntity<String> updateVehicle(@RequestParam String username, @RequestParam String vehicleNumber) {
+		// HttpSession session = request.getSession(false);
+		// Roles role = (Roles) session.getAttribute("roles");
+		driverLogsService.updateVehicle(username, vehicleNumber);
 		ambulanceService.updateAmbulanceStatus(vehicleNumber.toUpperCase(), true);
-		return new ResponseEntity<String>(role.getUsername(), HttpStatus.OK);
+		return new ResponseEntity<String>(username, HttpStatus.OK);
 	}
 
 }

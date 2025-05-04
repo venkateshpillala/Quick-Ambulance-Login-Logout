@@ -66,7 +66,13 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutUrl("/auth/logout")
                 .logoutSuccessHandler((request, response, authentication) -> {
-                    response.sendRedirect("/auth/logout-success");
+                	 response.setContentType("application/json");
+                	 response.setCharacterEncoding("UTF-8");
+                	 
+                	 Map<String, Object> data = new HashMap<String, Object>();
+                	 data.put("logout", "success");
+                	 
+                	 new ObjectMapper().writeValue(response.getWriter(), data);
                 })
                 .invalidateHttpSession(false) //Keeps session alive
                 .clearAuthentication(true)    // delete saved authentication details
